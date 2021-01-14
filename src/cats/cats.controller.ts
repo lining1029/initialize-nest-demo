@@ -11,6 +11,10 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  UseFilters,
+  UsePipes,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable, of } from 'rxjs';
@@ -18,8 +22,21 @@ import { CreateCatDto } from './dto/create-cat.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
 import { ForbiddenException } from '../common/exception/forbidden.exception';
+import { HttpExceptionFilter } from '../common/filter/http-exception.filter';
+import { ValidatePipe } from '../common/pipe/validate.pipe';
+// import { RolesGuard } from '../common/guard/roles.guard';
+import { Roles } from '../common/decorator/roles.decorator';
+import { LoggingInterceptor } from '../common/interceptor/logging.interceptor';
+import { ExcludeNullInterceptor } from '../common/interceptor/exclude.null.interceptor';
+import { TransformInterceptor } from '../common/interceptor/transform.interceptor';
+import { TimeoutInterceptor } from '../common/interceptor/timeout.interceptor';
 
 @Controller('cats') // 装饰器指定路径前缀
+@UseInterceptors(new LoggingInterceptor()) // 拦截器
+@UseFilters(new HttpExceptionFilter()) // 控制器作用域
+@UseInterceptors(new ExcludeNullInterceptor()) // 拦截器
+@UseInterceptors(new TransformInterceptor()) // 拦截器
+@UseInterceptors(new TimeoutInterceptor()) // 拦截器
 export class CatsController {
   constructor(private catsService: CatsService) {}
 
@@ -99,6 +116,14 @@ export class CatsController {
 
   @Get()
   findAll6() {
+    throw new ForbiddenException();
+  }
+
+  @Post()
+  @Roles('admin')
+  @UseFilters(new HttpExceptionFilter())
+  @UsePipes(new ValidatePipe())
+  async create4(@Body() createCatDto: CreateCatDto) {
     throw new ForbiddenException();
   }
 }
