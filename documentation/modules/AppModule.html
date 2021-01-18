@@ -171,82 +171,7 @@
             </div>
         </div>
 
-        <section>
-    
-    <h3 id="methods">
-        Methods
-    </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="configure"></a>
-                    <span class="name">
-                        <b>
-                            configure
-                        </b>
-                        <a href="#configure"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>configure(consumer: MiddlewareConsumer)</code>
-                </td>
-            </tr>
 
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="42"
-                            class="link-to-prism">src/app.module.ts:42</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>consumer</td>
-                                    <td>
-                                            <code>MiddlewareConsumer</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</section>
     </div>
 
 
@@ -267,44 +192,48 @@ import { HttpExceptionFilter } from &#x27;./common/filter/http-exception.filter&
 import { ValidatePipe } from &#x27;./common/pipe/validate.pipe&#x27;;
 import { RolesGuard } from &#x27;./common/guard/roles.guard&#x27;;
 import { LoggingInterceptor } from &#x27;./common/interceptor/logging.interceptor&#x27;;
-
+import { MongooseModule } from &#x27;@nestjs/mongoose&#x27;;
 @Module({
-  imports: [CatsModule],
+  imports: [
+    CatsModule,
+    MongooseModule.forRoot(&#x27;mongodb://localhost:27017/nest&#x27;),
+  ],
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: ValidatePipe,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: RolesGuard,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: LoggingInterceptor,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter,
+    // },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: ValidatePipe,
+    // },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: RolesGuard,
+    // },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: LoggingInterceptor,
+    // },
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): any {
-    consumer
-      // .apply(cors(), helmet(), logger)
-      .apply(logger)
-      .exclude(
-        { path: &#x27;cats&#x27;, method: RequestMethod.GET },
-        { path: &#x27;cats&#x27;, method: RequestMethod.POST },
-        &#x27;cats/(.*)&#x27;,
-      )
-      .forRoutes(CatsController);
-    // .forRoutes({ path: &#x27;cats&#x27;, method: RequestMethod.GET });
-  }
-}
+// export class AppModule implements NestModule {
+//   configure(consumer: MiddlewareConsumer): any {
+//     consumer
+//       // .apply(cors(), helmet(), logger)
+//       .apply(logger)
+//       // .exclude(
+//       //   { path: &#x27;cats&#x27;, method: RequestMethod.GET },
+//       //   { path: &#x27;cats&#x27;, method: RequestMethod.POST },
+//       //   &#x27;cats/(.*)&#x27;,
+//       // )
+//       .forRoutes(CatsController);
+//     // .forRoutes({ path: &#x27;cats&#x27;, method: RequestMethod.GET });
+//   }
+// }
+export class AppModule {}
 </code></pre>
     </div>
 </div>

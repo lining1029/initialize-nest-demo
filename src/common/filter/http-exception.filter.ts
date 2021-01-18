@@ -13,7 +13,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
-    // qwert1234! 1044
+    //
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),

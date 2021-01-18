@@ -65,13 +65,13 @@
 <title>cluster_CatsModule</title>
 <polygon fill="none" stroke="black" stroke-dasharray="1,5" points="175,-70 175,-268 321,-268 321,-70 175,-70"/>
 </g>
-<g id="clust4" class="cluster">
-<title>cluster_CatsModule_exports</title>
-<polygon fill="none" stroke="black" points="197,-208 197,-260 299,-260 299,-208 197,-208"/>
-</g>
 <g id="clust6" class="cluster">
 <title>cluster_CatsModule_providers</title>
 <polygon fill="none" stroke="black" points="183,-78 183,-130 313,-130 313,-78 183,-78"/>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_CatsModule_exports</title>
+<polygon fill="none" stroke="black" points="197,-208 197,-260 299,-260 299,-208 197,-208"/>
 </g>
 <!-- CatsService  -->
 <g id="node1" class="node">
@@ -179,8 +179,22 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Module } from &#x27;@nestjs/common&#x27;;
 import { CatsService } from &#x27;./cats.service&#x27;;
 import { CatsController } from &#x27;./cats.controller&#x27;;
+import { MongooseModule } from &#x27;@nestjs/mongoose&#x27;;
+import { Cat, CatsSchema } from &#x27;./schemas/cats.schema&#x27;;
 
 @Module({
+  imports: [
+    MongooseModule.forFeatureAsync([
+      {
+        name: Cat.name,
+        useFactory: () &#x3D;&gt; {
+          const schema &#x3D; CatsSchema;
+          schema.pre(&#x27;save&#x27;, () &#x3D;&gt; console.log(&#x27;Hello from pre save&#x27;));
+          return schema;
+        },
+      },
+    ]),
+  ],
   controllers: [CatsController],
   providers: [CatsService],
   exports: [CatsService],

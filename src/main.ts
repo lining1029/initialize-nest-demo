@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 // import { ValidatePipe } from './common/pipe/validate.pipe';
 // import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 // import { logger } from './common/middleware/logger.middleware';
+declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,5 +16,10 @@ async function bootstrap() {
   // app.useGlobalInterceptors(new LoggingInterceptor()); // 全局拦截器
   // app.setGlobalPrefix('v1'); //全局路由前缀
   await app.listen(3000);
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 }
 bootstrap();
