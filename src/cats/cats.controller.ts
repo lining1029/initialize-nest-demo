@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Req,
+  Delete,
   Post,
   HttpCode,
   Header,
@@ -22,6 +23,7 @@ import { CreateCatDto } from './dto/create-cat.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
 import { ForbiddenException } from '../common/exception/forbidden.exception';
+import { CatDto } from './dto/cat.dto';
 // import { HttpExceptionFilter } from '../common/filter/http-exception.filter';
 // import { ValidatePipe } from '../common/pipe/validate.pipe';
 // // import { RolesGuard } from '../common/guard/roles.guard';
@@ -44,8 +46,28 @@ export class CatsController {
   // @HttpCode(204)
   // @Header('Cache-Control', 'none')
   create(@Body() cat: CreateCatDto): Promise<Cat> {
-    console.log(cat);
     return this.catsService.create(cat);
+  }
+
+  @Get(':id')
+  findById(@Param('id') id: string): Promise<Cat> {
+    return this.catsService.findOne(id);
+  }
+
+  @Post('update')
+  async update(@Body() cat: CatDto): Promise<Cat> {
+    return await this.catsService.update(cat);
+  }
+
+  @Get()
+  findAll(): Promise<Cat[]> {
+    return this.catsService.findAll();
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  async remove(@Param('id') id: string): Promise<string> {
+    return await this.catsService.remove(id);
   }
   //
   // @Get()
@@ -54,13 +76,13 @@ export class CatsController {
   // }
 
   // 要将相应重定向到特定的URL，可以使用@Redirect 装饰器或特定于库的相应对象
-  @Get('docs')
-  @Redirect('https://docs.nestjs.com', 302)
-  getDocs(@Query('version') version) {
-    if (version && version === '5') {
-      return { url: 'https://docs.nestjs/com/v5/' };
-    }
-  }
+  // @Get('docs')
+  // @Redirect('https://docs.nestjs.com', 302);
+  // getDocs(@Query('version') version) {
+  //   if (version && version === '5') {
+  //     return { url: 'https://docs.nestjs/com/v5/' };
+  //   }
+  // }
 
   // @Get(':id')
   // findOne(@Param() params): string {
@@ -73,52 +95,27 @@ export class CatsController {
   //   return `This action returns a #${id} cat44`;
   // }
 
-  @Get()
-  findAll1(): Observable<any[]> {
-    return of([1]);
-  }
-
-  @Get()
-  async findAll2(): Promise<any[]> {
-    return [];
-  }
-
-  // @Post()
-  // async create1(@Body() createCatDto: CreateCatDto) {
-  //   return 'This action adds a ne cat';
+  // @Get()
+  // findAll4() {
+  //   throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
   // }
-
-  // @Post()
-  // async create2(@Body() createCatDto: CreateCatDto) {
-  //   this.catsService.create(createCatDto);
+  //
+  // // 覆盖整个相应正文的实例
+  // @Get('findAll5')
+  // async findAll5() {
+  //   throw new HttpException(
+  //     {
+  //       status: HttpStatus.FORBIDDEN,
+  //       error: 'This is a custom message1234',
+  //     },
+  //     HttpStatus.FORBIDDEN,
+  //   );
   // }
-
-  @Get('findAll3')
-  findAll3(): Promise<Cat> {
-    return this.catsService.findAll();
-  }
-
-  @Get()
-  findAll4() {
-    throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-  }
-
-  // 覆盖整个相应正文的实例
-  @Get('findAll5')
-  async findAll5() {
-    throw new HttpException(
-      {
-        status: HttpStatus.FORBIDDEN,
-        error: 'This is a custom message',
-      },
-      HttpStatus.FORBIDDEN,
-    );
-  }
-
-  @Get()
-  findAll6() {
-    throw new ForbiddenException();
-  }
+  //
+  // @Get()
+  // findAll6() {
+  //   throw new ForbiddenException();
+  // }
 
   // @Post()
   // @Roles('admin')

@@ -14,8 +14,8 @@ export class Cat extends Document {
   @Prop()
   breed: string;
 
-  @Prop([String])
-  tags: string[];
+  // @Prop([String])
+  // tags: string[];
 }
 
 export const CatsSchema = SchemaFactory.createForClass(Cat);
