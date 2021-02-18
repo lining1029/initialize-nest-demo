@@ -3,6 +3,10 @@ import { CatsService } from './cats.service';
 import { CatsController } from './cats.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Cat, CatsSchema } from './schemas/cats.schema';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { HttpExceptionFilter } from '../common/filter/http-exception.filter';
+import { ExcludeNullInterceptor } from '../common/interceptor/exclude.null.interceptor';
+import { TransformInterceptor } from '../common/interceptor/transform.interceptor';
 
 @Module({
   imports: [
@@ -19,7 +23,21 @@ import { Cat, CatsSchema } from './schemas/cats.schema';
     ]),
   ],
   controllers: [CatsController],
-  providers: [CatsService],
+  providers: [
+    CatsService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ExcludeNullInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+  ],
   exports: [CatsService],
 })
 export class CatsModule {

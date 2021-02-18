@@ -24,7 +24,7 @@ import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
 import { ForbiddenException } from '../common/exception/forbidden.exception';
 import { CatDto } from './dto/cat.dto';
-// import { HttpExceptionFilter } from '../common/filter/http-exception.filter';
+import { HttpExceptionFilter } from '../common/filter/http-exception.filter';
 // import { ValidatePipe } from '../common/pipe/validate.pipe';
 // // import { RolesGuard } from '../common/guard/roles.guard';
 // import { Roles } from '../common/decorator/roles.decorator';
@@ -60,6 +60,7 @@ export class CatsController {
   }
 
   @Get()
+  @UseFilters(HttpExceptionFilter)
   findAll(): Promise<Cat[]> {
     return this.catsService.findAll();
   }
